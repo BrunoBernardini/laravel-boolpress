@@ -10,7 +10,7 @@ class PostApiController extends Controller
 {
     public function index()
     {
-        $data = Post::with(["category", "tags"])->get();
+        $data = Post::with(["category", "tags"])->paginate(5);
         return response()->json($data);
     }
 }
