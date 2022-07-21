@@ -18,4 +18,9 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::get("posts", "Api\PostApiController@index");
+Route::namespace("Api")
+        ->prefix("posts")
+        ->group(function(){
+            Route::get("/", "PostApiController@index");
+            Route::get("/{slug}", "PostApiController@show");
+        });

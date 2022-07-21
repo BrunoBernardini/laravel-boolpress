@@ -28,8 +28,7 @@ export default {
     },
     mounted() {
 
-    },
-    components: { HeaderComp, FooterComp }
+    }
 }
 </script>
 

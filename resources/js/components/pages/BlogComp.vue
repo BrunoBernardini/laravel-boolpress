@@ -1,35 +1,43 @@
 <template>
   <div class="container post-container">
     <h1>Tutti i post</h1>
-    <PostItem
-        v-for="post in posts"
-        :key="post.id"
-        :post="post"/>
-    <button
-        @click="getApi(pagination.current-1)"
-        :disabled="pagination.current === 1">&lt;</button>
-    <button
-        v-for="pageIndex in pagination.last"
-        :key="'page'+pageIndex"
-        @click="getApi(pageIndex)"
-        :disabled="pagination.current === pageIndex">{{pageIndex}}</button>
-    <button
-        @click="getApi(pagination.current+1)"
-        :disabled="pagination.current === pagination.last">></button>
+    <LoaderComp v-if="!posts"/>
+    <section class="posts" v-else>
+        <PostItem
+            v-for="post in posts"
+            :key="post.id"
+            :post="post"/>
+        <section class="buttons">
+            <button
+                @click="getApi(pagination.current-1)"
+                :disabled="pagination.current === 1">&lt;</button>
+            <button
+                v-for="pageIndex in pagination.last"
+                :key="'page'+pageIndex"
+                @click="getApi(pageIndex)"
+                :disabled="pagination.current === pageIndex">{{pageIndex}}</button>
+            <button
+                @click="getApi(pagination.current+1)"
+                :disabled="pagination.current === pagination.last">></button>
+        </section>
+    </section>
   </div>
 </template>
 
 <script>
 import PostItem from "../partials/PostItem.vue";
+import LoaderComp from "../partials/LoaderComp.vue";
+import { apiUrl } from "../../data/config";
 
 export default {
     name: "BlogComp",
     components: {
         PostItem,
+        LoaderComp
     },
     data() {
         return {
-            apiUrl: "/api/posts",
+            apiUrl,
             posts: null,
             pagination: {
                 current: null,
@@ -42,6 +50,7 @@ export default {
     },
     methods: {
         getApi(page) {
+            this.posts = null;
             axios.get(this.apiUrl + "?page=" + page)
                 .then(res => {
                 this.posts = res.data.data;
@@ -51,8 +60,7 @@ export default {
                 }
             });
         }
-    },
-    components: { PostItem }
+    }
 }
 </script>
 
